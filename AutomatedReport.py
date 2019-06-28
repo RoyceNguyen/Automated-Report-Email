@@ -13,11 +13,13 @@ conn = pyodbc.connect(server)
 cursor = conn.cursor()
 #query from database to get information
 query = """SELECT * """ 
+
 #using pandas to read sql query then write to excel file
 pandas = pd.read_sql(query,conn)
 conn.close()
 writer = pd.ExcelWriter('YourExcelFileName.xlsx',engine='xlsxwriter')
 pandas.to_excel(writer,'Sheet1',index=False)
+
 #changing the layout of the excel file to make it more readable
 worksheet = writer.sheets['Sheet1']
 #set excel sheet zoom
@@ -27,6 +29,7 @@ worksheet.set_column('A:B',15)
 worksheet.set_column('C:D',50)
 worksheet.set_column('G:H',30)
 writer.save()
+
 #Log in to email account.
 fromaddr = "from@gmail.com"
 toaddr = "to@gmail.com"
@@ -35,7 +38,8 @@ msg['From'] = fromaddr
 msg['To'] = toaddr
 msg['Subject'] = "Email Subject"
 part = MIMEBase('application', "octet-stream")
-part.set_payload(open("YourExcelFileName.xlsx", "rb").read())    # This is the same file name from above
+ # This is the same file name from above
+part.set_payload(open("YourExcelFileName.xlsx", "rb").read())   
 #Need to encode so that query can be read 
 encoders.encode_base64(part)
 part.add_header('Content-Disposition', 'attachment; filename="YourExcelFileName.xlsx"')
